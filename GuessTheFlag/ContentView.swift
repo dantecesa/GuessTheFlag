@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var countries: [String] = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+    @State private var countries: [String] = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US", "Japan", "Switzerland"].shuffled()
     @State private var correctAnswer: Int = Int.random(in: 0...2)
     @State private var showAlert: Bool = false
     @State private var alertText: String = ""
     @State var numberOfCorrectGuesses: Int = 0
     @State var numberOfGuesses: Int = 0
+    @State var gameOver: Bool = false
     
     var body: some View {
         ZStack {
@@ -49,24 +50,41 @@ struct ContentView: View {
         }.alert(alertText, isPresented: $showAlert) {
             Button("Continue", action: reloadFlags)
         } message: {
-            Text("Youre score is: \(numberOfCorrectGuesses)/\(numberOfGuesses)")
+            Text("Your score is: \(numberOfCorrectGuesses)/\(numberOfGuesses)")
+        }.alert("Good job!", isPresented: $gameOver) {
+            Button("Play Again", action: reset)
+        } message: {
+            Text("Your final score was: \(numberOfCorrectGuesses)/\(numberOfGuesses)")
+
         }
     }
     
     func reloadFlags() {
+        countries.remove(at: correctAnswer)
         countries = countries.shuffled()
         correctAnswer = Int.random(in: 0...2)
     }
     
     func makeGuess(buttonIndex: Int) {
         if buttonIndex == correctAnswer {
-            alertText = "You're correct"
+            alertText = "That's correct!"
             numberOfCorrectGuesses += 1
         } else {
-            alertText = "Sorry wrong answer. That's \(countries[buttonIndex])"
+            alertText = "Nope, that's \(countries[buttonIndex])."
         }
         numberOfGuesses += 1
-        showAlert = true
+        
+        if numberOfGuesses == 10 {
+            gameOver = true
+        } else {
+            showAlert = true
+        }
+    }
+    
+    func reset() {
+        self.numberOfGuesses = 0
+        self.numberOfCorrectGuesses = 0
+        countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US", "Japan", "Switzerland"]
     }
 }
 
