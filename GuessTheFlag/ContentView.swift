@@ -12,14 +12,11 @@ struct ContentView: View {
     @State private var correctAnswer: Int = Int.random(in: 0...2)
     @State private var showAlert: Bool = false
     @State private var alertText: String = ""
-    @State var numberOfGuesses: Int = 0
     @State var numberOfCorrectGuesses: Int = 0
-    
+    @State var numberOfGuesses: Int = 0
     
     var body: some View {
         ZStack {
-            //Color.blue.ignoresSafeArea()
-            //LinearGradient(colors: [.blue, .green], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
             RadialGradient(stops: [
                 .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
                 .init(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3)],center: .top, startRadius: 200, endRadius: 700).ignoresSafeArea()
