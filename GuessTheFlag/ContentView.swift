@@ -16,6 +16,13 @@ struct ContentView: View {
     @State var numberOfGuesses: Int = 0
     @State var gameOver: Bool = false
     
+    func flagImage(flagIndex: Int) -> some View {
+        Image(countries[flagIndex])
+            .renderingMode(.original)
+            .clipShape(Circle().scale(1))
+            .shadow(radius: 5)
+    }
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -35,10 +42,7 @@ struct ContentView: View {
                         Button {
                             makeGuess(buttonIndex: index)
                         } label: {
-                            Image(countries[index])
-                                .renderingMode(.original)
-                                .clipShape(Circle().scale(1))
-                                .shadow(radius: 5)
+                            flagImage(flagIndex: index)
                         }.padding()
                     }
                 }.frame(width: .infinity).padding(.vertical, 20).background(.regularMaterial).clipShape(RoundedRectangle(cornerRadius: 20))
@@ -55,7 +59,6 @@ struct ContentView: View {
             Button("Play Again", action: reset)
         } message: {
             Text("Your final score was: \(numberOfCorrectGuesses)/\(numberOfGuesses)")
-
         }
     }
     
