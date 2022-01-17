@@ -15,6 +15,7 @@ struct ContentView: View {
     @State var numberOfCorrectGuesses: Int = 0
     @State var numberOfGuesses: Int = 0
     @State var gameOver: Bool = false
+    @State var animationDegrees: [Double] = [0, 0, 0]
     
     func flagImage(flagIndex: Int) -> some View {
         Image(countries[flagIndex])
@@ -40,10 +41,15 @@ struct ContentView: View {
                     }.padding()
                     ForEach(0..<3) { index in
                         Button {
+                            withAnimation(.linear) {
+                                animationDegrees[index] += 360
+                            }
                             makeGuess(buttonIndex: index)
                         } label: {
                             flagImage(flagIndex: index)
-                        }.padding()
+                        }
+                        .padding()
+                        .rotation3DEffect(.degrees(animationDegrees[index]), axis: (x: 0, y: 1, z: 0))
                     }
                 }.frame(width: .infinity).padding(.vertical, 20).background(.regularMaterial).clipShape(RoundedRectangle(cornerRadius: 20))
                 Spacer()
