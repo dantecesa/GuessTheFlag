@@ -16,6 +16,7 @@ struct ContentView: View {
     @State var numberOfGuesses: Int = 0
     @State var gameOver: Bool = false
     @State var animationDegrees: [Double] = [0, 0, 0]
+    @State var animationOpacity: [Double] = [0, 0, 0]
     
     func flagImage(flagIndex: Int) -> some View {
         Image(countries[flagIndex])
@@ -41,8 +42,13 @@ struct ContentView: View {
                     }.padding()
                     ForEach(0..<3) { index in
                         Button {
-                            withAnimation(.linear) {
+                            withAnimation(.interpolatingSpring(stiffness: 10, damping: 2)) {
                                 animationDegrees[index] += 360
+                            }
+                            
+                            withAnimation(.linear) {
+                                animationOpacity = [0.25, 0.25, 0.25]
+                                animationOpacity[index] = 1
                             }
                             makeGuess(buttonIndex: index)
                         } label: {
@@ -50,6 +56,12 @@ struct ContentView: View {
                         }
                         .padding()
                         .rotation3DEffect(.degrees(animationDegrees[index]), axis: (x: 0, y: 1, z: 0))
+                        .opacity(animationOpacity[index])
+                        .onAppear {
+                            withAnimation(.default.delay(0.25)) {
+                                animationOpacity = [1, 1, 1]
+                            }
+                        }
                     }
                 }.frame(width: .infinity).padding(.vertical, 20).background(.regularMaterial).clipShape(RoundedRectangle(cornerRadius: 20))
                 Spacer()
@@ -72,6 +84,9 @@ struct ContentView: View {
         countries.remove(at: correctAnswer)
         countries = countries.shuffled()
         correctAnswer = Int.random(in: 0...2)
+        withAnimation(.default.delay(0.10)) {
+            animationOpacity = [1, 1, 1]
+        }
     }
     
     func makeGuess(buttonIndex: Int) {
@@ -94,6 +109,9 @@ struct ContentView: View {
         self.numberOfGuesses = 0
         self.numberOfCorrectGuesses = 0
         countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US", "Japan", "Switzerland"]
+        withAnimation(.default.delay(0.25)) {
+            self.animationOpacity = [1, 1, 1]
+        }
     }
 }
 
