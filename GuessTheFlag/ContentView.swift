@@ -9,6 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var countries: [String] = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US", "Japan", "Switzerland"].shuffled()
+    
+    let labels = [
+        "Estonia": "Flag with three horizontal stripes of equal size. Top stripe blue, middle stripe black, bottom stripe white",
+        "France": "Flag with three vertical stripes of equal size. Left stripe blue, middle stripe white, right stripe red",
+        "Germany": "Flag with three horizontal stripes of equal size. Top stripe black, middle stripe red, bottom stripe gold",
+        "Ireland": "Flag with three vertical stripes of equal size. Left stripe green, middle stripe white, right stripe orange",
+        "Italy": "Flag with three vertical stripes of equal size. Left stripe green, middle stripe white, right stripe red",
+        "Nigeria": "Flag with three vertical stripes of equal size. Left stripe green, middle stripe white, right stripe green",
+        "Poland": "Flag with two horizontal stripes of equal size. Top stripe white, bottom stripe red",
+        "Russia": "Flag with three horizontal stripes of equal size. Top stripe white, middle stripe blue, bottom stripe red",
+        "Spain": "Flag with three horizontal stripes. Top thin stripe red, middle thick stripe gold with a crest on the left, bottom thin stripe red",
+        "UK": "Flag with overlapping red and white crosses, both straight and diagonally, on a blue background",
+        "US": "Flag with red and white stripes of equal size, with white stars on a blue background in the top-left corner",
+        "Japan": "Flag with white background and red dot.",
+        "Switzerland": "Flag with red background and a centered white plus."
+    ]
+    
     @State private var correctAnswer: Int = Int.random(in: 0...2)
     @State private var showAlert: Bool = false
     @State private var alertText: String = ""
@@ -39,7 +56,10 @@ struct ContentView: View {
                     VStack {
                         Text("Tap the country of…").font(.subheadline.weight(.heavy)).foregroundStyle(.secondary)
                         Text(countries[correctAnswer]).font(.largeTitle.weight(.semibold))
-                    }.padding()
+                    }
+                    .padding()
+                    .accessibilityElement()
+                    .accessibilityLabel("Tap the conutry of \(countries[correctAnswer])")
                     ForEach(0..<3) { index in
                         Button {
                             withAnimation(.interpolatingSpring(stiffness: 10, damping: 2)) {
@@ -53,6 +73,7 @@ struct ContentView: View {
                             makeGuess(buttonIndex: index)
                         } label: {
                             flagImage(flagIndex: index)
+                                .accessibilityLabel(labels[countries[index], default: "Unknown Flag"])
                         }
                         .padding()
                         .rotation3DEffect(.degrees(animationDegrees[index]), axis: (x: 0, y: 1, z: 0))
